@@ -1,26 +1,49 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 import { Input } from './assets/components/Input';
 import { InputOutput } from './assets/components/InputOutput';
 import { Log } from './assets/components/Log';
 import { RegisterButton } from './assets/components/RegisterButton';
+import { supabase } from '../lib/supabase';
 
 function App() {
-
-  // const records = [
-  //   { title: "勉強の記録1", time: 1 },
-  //   { title: "勉強の記録2", time: 3 },
-  //   { title: "勉強の記録3", time: 5 }
-  // ];
-
+  
+  // 要素
   const [records, setRecords] = useState([]);
-
+  // 
   const [content, setContent] = useState("");
+  // 学習時間
   const [time, setTime] = useState(0);
-  const [error, setError] = useState("");
+  // 学習合計時間
   const [sumTime, setSumTime] = useState(0);
+  // エラー表示
+  const [error, setError] = useState("");
+  // Loading
+  const [loading, setLoading] = useState(false);
 
-  const onRegister = () =>{
+  
+  useEffect(() => {
+    // DBからデータ読み込み
+    const fetchRecords = async () => {
+      setLoading(true);
+      
+      const { data, error } = await supabase.from('study-record').select('*');
+      
+      setLoading(false);
+      
+      console.log(data, error);
+      if (error) return;
+
+      setRecords(data);
+      setSumTime(data.reduce((sum, record) => sum + record.time, 0));
+    };
+
+    // 読み込み実行
+    fetchRecords();
+  }, []);
+
+  // 登録
+  const onRegister = async () => {
     if(content == "" || time <= 0){
       setError(true);
       return;
@@ -29,15 +52,30 @@ function App() {
       setError(false);
     }
 
-    const newRecords = [...records, {title:content, time:time}];
+    const insertRecord = {title:content, time:time};
+
+    const { data, error } = await supabase.from("study-record").insert(insertRecord).select().single();
+    if(error){
+      alert("登録に失敗しました");
+    }
+    console.log(`${data.id} error:${error}`)  
+        
+    const newRecords = [...records, data];
     setRecords(newRecords);
-
     setSumTime(sumTime + parseInt(time, 10));
-
-     setContent("");
-     setTime(0);
+    setContent("");
+    setTime(0);
   }
 
+  // 消去
+  const onDelete = async (id) => {
+    const {data, error} = await supabase.from("study-record").delete().eq("id", id);
+    if(error){
+      alert("消去に失敗しました");
+    }
+  }
+
+  
   return (
     <>
       <h1>学習記録一覧</h1>
@@ -50,10 +88,14 @@ function App() {
 
       {error && <p>入力されてない項目があります</p>}
       
-      <Log records = {records} />
-
-      <p>{sumTime} / 1000(h)</p>
-
+      {loading ? (
+        <p>読み込み中</p>
+      ):(
+        <>
+          <Log records = {records} onDelete = {onDelete} />
+          <p>{sumTime} / 1000(h)</p>
+        </>
+      )}
     </>
   )
 }
