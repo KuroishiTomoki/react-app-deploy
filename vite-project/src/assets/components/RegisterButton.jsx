@@ -1,10 +1,12 @@
+import { PrimaryButton } from "./atom/PrimaryButton";
+
 export const RegisterButton = (props) =>{
 
     const {onRegister} = props;
 
     return(
         <>
-            <button onClick={onRegister}>登録</button>            
+            <PrimaryButton onClick={onRegister}>登録</PrimaryButton>            
         </>
     )
 } 
