@@ -11,7 +11,7 @@ export const Log = (props) => {
                 return (
                     <SContainer key={index}>
                         {record.title} {record.time}時間
-                        <PrimaryButton onClick={() => onDelete(record.id)}>削除</PrimaryButton>
+                        <PrimaryButton bgColor = "gray" onClick={() => onDelete(record.id)}>削除</PrimaryButton>
                     </SContainer>
                 )
             })} 
