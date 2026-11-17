@@ -13,6 +13,6 @@ export const PrimaryButton = (props) => {
 
 
 const SButton = styled(BaseButton)`
-    background-color: blue;
-    
+    background-color: yellow;
+    color:#000;
 `
