@@ -70,6 +70,9 @@ function App() {
   // 消去
   const onDelete = async (id) => {
     const {data, error} = await supabase.from("study-record").delete().eq("id", id);
+    if(error){
+      alert("消去に失敗しました");
+    }
   }
 
   
