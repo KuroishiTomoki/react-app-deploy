@@ -6,7 +6,7 @@ export const RegisterButton = (props) =>{
 
     return(
         <>
-            <PrimaryButton onClick={onRegister}>登録</PrimaryButton>            
+            <PrimaryButton onClick={() => onRegister()}>登録</PrimaryButton>            
         </>
     )
 } 

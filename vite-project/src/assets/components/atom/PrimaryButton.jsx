@@ -6,7 +6,7 @@ export const PrimaryButton = (props) => {
 
     return(
         <>
-            <SButton onClick={onClick}>{children}</SButton>
+            <SButton onClick = {onClick}>{children}</SButton>
         </>
     )
 } 

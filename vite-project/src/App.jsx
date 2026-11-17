@@ -52,15 +52,15 @@ function App() {
       setError(false);
     }
 
-    const newRecord = {title:content, time:time};
-    const newRecords = [...records, newRecord];
+    const insertRecord = {title:content, time:time};
 
-    const { data, error } = await supabase.from("study-record").insert(newRecord);
+    const { data, error } = await supabase.from("study-record").insert(insertRecord).select().single();
     if(error){
       alert("登録に失敗しました");
     }
-    console.log(`${data} error:${error}`)    
-
+    console.log(`${data.id} error:${error}`)  
+        
+    const newRecords = [...records, data];
     setRecords(newRecords);
     setSumTime(sumTime + parseInt(time, 10));
     setContent("");
@@ -68,8 +68,8 @@ function App() {
   }
 
   // 消去
-  const onDelete = () => {
-    alert("削除");
+  const onDelete = async (id) => {
+    const {data, error} = await supabase.from("study-record").delete().eq("id", id);
   }
 
   
