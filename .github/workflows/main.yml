@@ -45,6 +45,12 @@ jobs:
           node-version: "22"
           cache: "npm"
           cache-dependency-path: ./vite-project/package-lock.json
+      ## ビルドジョブで生成＆保存されたdistフォルダを取得
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist
       - name: Install firebase-tools
         run: npm install --save-dev firebase-tools
       - name: Decode Firebase service account key
