@@ -5,6 +5,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',        // DOM を使えるようにする
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './tests/setup.js',
   },
 })
