@@ -20,6 +20,8 @@ jobs:
           node-version: "22"
       - name: Install dependencies
         run: npm install
+      - name: Run test
+        run: npx vitest run
       - name: Run build
         run: npm run build
       ##ビルドでできた dist フォルダをデプロイで使えるように保存
