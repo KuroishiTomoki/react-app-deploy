@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { Log } from '../src/assets/components/Log'
 import App from "../src/App"
 import userEvent from "@testing-library/user-event"
+import { type } from "@testing-library/user-event/dist/cjs/utility/type.js"
 
 // Supabase のモック
 vi.mock('../lib/supabase', () => ({
@@ -26,7 +27,7 @@ describe('App', () => {
     render(<Log records={[{ id: 1, title: 'React', time: 3 }]} onDelete={() => {}} />)
     const el = screen.getByText(/React/)
     expect(el).toBeInTheDocument()
-  })        
+  })            
 
   it(`登録ボタンで追加される`, async () => {
     const user = userEvent.setup();
@@ -50,6 +51,18 @@ describe('App', () => {
     expect(await screen.findByText(/Vitest 2時間/)).toBeInTheDocument()
 
     expect(await screen.findByText('2 / 1000(h)')).toBeInTheDocument()
+  })
+
+  it('入力バリデーション', async () => {
+    const user = userEvent.setup()
+
+    render(<App/>)
+
+    await screen.findByText('0 / 1000(h)')
+
+    await user.click(screen.getByRole('button', { name: '登録' }))
+
+    expect(await screen.getByText('入力されてない項目があります')).toBeInTheDocument()
   })
 })
 
